@@ -1,17 +1,14 @@
-from redis import asyncio as aioredis
 from fastapi import FastAPI, Request
-from typing import List
 from core.config import Settings
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.middleware.cors import CORSMiddleware
-
-from routes.user import router as user_router
-from routes.address import router as address_router
+from routes.email import router as user_router
+from routes.notification import router as notification_router
 from core.utils.response import Response, RequestValidationError 
 
 app = FastAPI(
-    title="User Service API",
-    description="Handles user authentication, management, and address operations.",
+    title="Notification Service API",
+    description="API to handle sending email and push notifications to users.",
     version="1.0.0"
 )
 settings = Settings()
@@ -34,20 +31,16 @@ app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
         
 # Include the routers
 app.include_router(user_router)
-app.include_router(address_router)
+app.include_router(notification_router)
 
 
 @app.get("/")
 async def read_root():
     return {
-        "service": "User Service API",
+        "service": "Notification Service API",
         "status": "Running",
         "version": "1.0.0",
-        "endpoints": {
-            "users": "/users",
-            "addresses": "/addresses",
-            "login": "/users/login",
-        }
+        
     }
 
 # Handle validation errors globally

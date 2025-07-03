@@ -14,9 +14,9 @@ class EmailBase(BaseModel):
     to_email: EmailStr
     from_email: EmailStr
     from_password: str
-    html_content: str
+    activation_link: str
     type: EmailType
-    
+
     class Config:
         from_attributes = True
 

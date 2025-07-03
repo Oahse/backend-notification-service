@@ -17,8 +17,8 @@ def render_activation_email(activation_link: str) -> str:
     return template.render(activation_link=activation_link)
 
 
-async def send_activation_email(to_email: str, activation_link: str, from_email: str, from_password: str):
-    html_content = render_activation_email(activation_link)
+async def send_activation_email(to_email: str, html_content: str, from_email: str, from_password: str):
+    html_content = render_activation_email(html_content)
     # print(html_content,'-')
     msg = EmailMessage()
     msg["Subject"] = "Activate your account"
@@ -36,4 +36,16 @@ async def send_activation_email(to_email: str, activation_link: str, from_email:
     await smtp.quit() 
     
 def send_email(to_email:str, activation_link:str, from_email:str, from_password:str):
-    asyncio.run(send_activation_email(to_email=to_email, activation_link=activation_link, from_email=from_email, from_password=from_password))
+    # If you're inside a running event loop (e.g., FastAPI), use this instead:
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = None
+
+    if loop and loop.is_running():
+        # If inside an async context (like FastAPI), schedule push task
+        asyncio.create_task(send_activation_email(to_email=to_email, activation_link=activation_link, from_email=from_email, from_password=from_password))
+
+    else:
+        # Otherwise, run it synchronously (blocking) as entry point
+        asyncio.run(send_activation_email(to_email=to_email, activation_link=activation_link, from_email=from_email, from_password=from_password))
