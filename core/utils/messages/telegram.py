@@ -1,7 +1,7 @@
 from telegram import Update, Bot
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from typing import Optional
-
+from core.config import settings
 class TelegramBotHandler:
     def __init__(self, token: str):
         self.bot = Bot(token=token)
@@ -51,8 +51,7 @@ class TelegramBotHandler:
             "/help - show help"
         )
 
-
-BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"
+BOT_TOKEN = str(settings.TELEGRAM_BOT_TOKEN) 
 
 telegram_bot = TelegramBotHandler(BOT_TOKEN)
 # Replace with your bot token

@@ -16,3 +16,12 @@ class NotificationCreate(BaseModel):
     token: str
     data: dict ={}
     type: NotificationType = NotificationType.CUSTOM
+
+
+class TelegramNotificationCreate(BaseModel):
+    chat_id: int
+    text: Optional[str]
+    photo_path: Optional[str]
+    document_path: Optional[str]
+    photo_caption: Optional[str]
+    document_caption: Optional[str]
