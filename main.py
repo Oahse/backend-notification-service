@@ -5,7 +5,8 @@ from starlette.middleware.cors import CORSMiddleware
 from routes.email import router as user_router
 from routes.notification import router as notification_router
 from core.utils.response import Response, RequestValidationError 
-
+from core.utils.messages import telegram
+import asyncio
 app = FastAPI(
     title="Notification Service API",
     description="API to handle sending email and push notifications to users.",
@@ -64,3 +65,14 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return Response(message=message, success=False, code=422)
 
 
+@app.on_event("startup")
+async def startup():
+   # Run Telegram bot in background so FastAPI is not blocked
+    asyncio.create_task(telegram.run_telegram_bot())
+    print("Bot is running...")
+
+# FastAPI event handler triggered on application shutdown
+@app.on_event("shutdown")
+async def shutdown():
+    await telegram.telegram_app.stop()
+    print("Bot stopped.")

@@ -41,6 +41,8 @@ class Settings:
     # Security
     SECRET_KEY: str = os.getenv('SECRET_KEY', 'changeme-super-secret-key')
 
+    # telegram BOT_TOKEN
+    TELEGRAM_BOT_TOKEN: str = os.getenv('TELEGRAM_BOT_TOKEN', 'changeme-super-secret-key')
     # CORS
     RAW_CORS_ORIGINS: str = os.getenv('BACKEND_CORS_ORIGINS', '')
     BACKEND_CORS_ORIGINS: List[str] = parse_cors(RAW_CORS_ORIGINS)
